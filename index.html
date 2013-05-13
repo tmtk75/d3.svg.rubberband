@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <style>
+  body {
+    font: 10px sans-serif;
+  }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+  .x.axis path {
+    display: none;
+  }
+  .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+  svg {
+    border: solid 1px #ddd;
+  }
+  </style>
+  <link rel="stylesheet" href="./d3.svg.rubberband.css" />
+</head>
+<body>
+  <script src="http://underscorejs.org/underscore-min.js"></script>
+  <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+  <script src="http://coffeescript.org/extras/coffee-script.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="./d3.svg.rubberband.js"></script>
+  <script type='text/coffeescript'>
+  margin = top: 20, right: 20, bottom: 30, left: 50
+  width = 960/2 - margin.left - margin.right
+  height = 500/2 - margin.top - margin.bottom
+
+  x = d3.time.scale().range([0, width])
+
+  y = d3.scale.linear().range([height, 0])
+
+  xAxis = d3.svg.axis().scale(x).orient("bottom")
+
+  yAxis = d3.svg.axis().scale(y).orient("left")
+                       .ticks(5)
+
+  line = d3.svg.line()
+           .x((d)-> x d.date)
+           .y((d)-> y d.close)
+
+  svg = d3.select("body").append("svg")
+          .attr(width: width + margin.left + margin.right, height: height + margin.top + margin.bottom)
+          .append("g")
+          .attr(transform: "translate(#{margin.left},#{margin.top})")
+
+  #$.get "data.json", (data)->
+  #  data = _.zip(data.dates, data.values).map((e)-> {date:e[0], "close":e[1]})
+  #  parseDate = d3.time.format("%Y-%m-%d").parse
+  d3.tsv "data.tsv", (data)->
+    parseDate = d3.time.format("%d-%b-%y").parse
+    data.forEach (d)->
+      d.date = parseDate(d.date)
+      d.close = +d.close
+    data.sort (a, b)-> a.date.getTime() - b.date.getTime()
+
+    x.domain d3.extent data, (d)-> d.date
+    y.domain [0, (d3.extent data, (d)-> d.close)[1]]
+
+    svg.append("g")
+       .classed("x axis", true)
+       .attr(transform: "translate(0,#{height})")
+       .call(xAxis)
+
+    svg.append("g")
+       .classed("y axis", true)
+       .call(yAxis)
+       .append("text")
+       .attr(dx:50, y:6, dy:".71em")
+       .style("text-anchor", "end")
+       .text("# of apps")
+
+    svg.append("path")
+       .datum(data)
+       .classed("line", true)
+       .attr(d:line)
+
+    d = (xy)-> data[(d3.bisector (e)-> e.date).left data, xy[0]]
+    t = (e)-> d3.time.format("#{e.close} at %b %-d") e.date
+    d3.svg.rubberband(svg, x, y)
+          .data(d)
+          .y((xy)-> y d(xy)?.close)
+          .text(t)
+  </script>
+</body>
