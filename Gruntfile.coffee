@@ -17,7 +17,7 @@ module.exports = (grunt)->
 
     uglify:
       options:
-        banner: """/* <%= pkg.name %>-<%= pkg.version %> <%=grunt.template.today('yyyy-mm-dd')%> */\n"""
+        banner: """/* <%= pkg.name %>-<%= pkg.version %> <%=grunt.template.today('yyyy-mm-dd HH:MM:ss')%> */\n"""
         mangle: false  ## if true, jumly.min.js is corrupted
       build:
         src: 'build/<%= pkg.name %>.js'
@@ -26,7 +26,7 @@ module.exports = (grunt)->
     cssmin:
       compress:
         options:
-          banner: """/* <%= pkg.name %>-<%= pkg.version %> <%=grunt.template.today('yyyy-mm-dd')%> */"""
+          banner: """/* <%= pkg.name %>-<%= pkg.version %> <%=grunt.template.today('yyyy-mm-dd HH:MM:ss')%> */"""
         files:
           'build/<%= pkg.name %>.min.css': [ "build/<%= pkg.name %>.css" ]
 
