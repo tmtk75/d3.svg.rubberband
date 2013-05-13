@@ -8,27 +8,27 @@ module.exports = (grunt)->
     coffee:
       compile:
         files:
-          "<%= pkg.name %>.js": ["d3.svg.rubberband.coffee"]
+          "build/<%= pkg.name %>.js": "d3.svg.rubberband.coffee"
 
     stylus:
       compile:
         files:
-          "<%= pkg.name %>.css": "d3.svg.rubberband.styl"
+          "build/<%= pkg.name %>.css": "d3.svg.rubberband.styl"
 
     uglify:
       options:
         banner: """/* <%= pkg.name %>-<%= pkg.version %> <%=grunt.template.today('yyyy-mm-dd')%> */\n"""
         mangle: false  ## if true, jumly.min.js is corrupted
       build:
-        src: '<%= pkg.name %>.js'
-        dest: '<%= pkg.name %>.min.js'
+        src: 'build/<%= pkg.name %>.js'
+        dest: 'build/<%= pkg.name %>.min.js'
 
     cssmin:
       compress:
         options:
           banner: """/* <%= pkg.name %>-<%= pkg.version %> <%=grunt.template.today('yyyy-mm-dd')%> */"""
         files:
-          'build/<%= pkg.name %>.min.css': [ "<%= pkg.name %>.css" ]
+          'build/<%= pkg.name %>.min.css': [ "build/<%= pkg.name %>.css" ]
 
     "jasmine-node":
       run:
