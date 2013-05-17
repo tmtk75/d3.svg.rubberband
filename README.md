@@ -3,6 +3,10 @@
 This is a [d3](http://d3js.org/) plugin which gives rubberbands to your linecharts.  
 It's like a [d3.brush](https://github.com/mbostock/d3/wiki/SVG-Controls) in the control section of API Reference.
 
+<svg width='100' height='50'>
+  <line x1='0' y1='0' x2='100' y2='50' color='black' stroke='black'/>
+</svg>
+
 Here is a screenshot  
 <img src='https://s3-ap-northeast-1.amazonaws.com/tmtk75.github.com/d3.svg.rubberband/overview.png'>
 
